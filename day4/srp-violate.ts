@@ -8,6 +8,7 @@ class Product{
     }
 }
 
+//violating SRP: Shopping cart handling multiple responsibilities
 class ShoppingCart{
     products: Product[] = []
 
@@ -26,29 +27,13 @@ class ShoppingCart{
         }
         return total
     }
-}
 
-class InvoicePrinter{
-    private cart: ShoppingCart;
-
-    constructor(cart: ShoppingCart){
-        this.cart = cart
-    }
-
-    printInvoice(){
+    printInvoice(): void{
         console.log("shopping cart invoice")
-        for(const product of this.cart.products){
+        for(const product of this.products){
             console.log(`${product.name} - Rs. ${product.price}`)
         }
-        console.log(`Total - Rs. ${this.cart.calculateTotal()}`)
-    }
-}
-
-class ShoppingCartStorage{
-    private cart: ShoppingCart;
-
-    constructor(cart: ShoppingCart){
-        this.cart = cart
+        console.log(`Total - Rs. ${this.calculateTotal()}`)
     }
 
     saveToDb(): void{
@@ -56,13 +41,10 @@ class ShoppingCartStorage{
     } 
 }
 
-const cart = new ShoppingCart()
-cart.addProduct(new Product("mobile", 3000))
-cart.addProduct(new Product("tv", 1000))
+const cart = new ShoppingCart();
 
-const printer = new InvoicePrinter(cart)
-printer.printInvoice()
+cart.addProduct(new Product("mobile", 20000))
+cart.addProduct(new Product("TV", 10000))
 
-const repo = new ShoppingCartStorage(cart);
-repo.saveToDb()
- 
+cart.printInvoice()
+cart.saveToDb()
